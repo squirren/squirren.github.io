@@ -108,20 +108,24 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Squirren&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="[TOC]  run方法根据任务类型训练得到一组弱学习器及对应的权重。分类任务(目前只能处理二分类)和回归任务调用的是相同的方法进行训练，分类任务可以看作是取值范围为[-1, +1]的回归任务。基学习器是DecisionTreeRegressionModel。1234567891011121314151617181920212223// Method to train a gradient boo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark.GBDT学习-GradientBoostedTrees">
+<meta property="og:url" content="http://yoursite.com/2018/07/04/Spark.GBDT学习-GradientBoostedTrees/index.html">
 <meta property="og:site_name" content="Squirren&#39;s Blog">
+<meta property="og:description" content="[TOC]  run方法根据任务类型训练得到一组弱学习器及对应的权重。分类任务(目前只能处理二分类)和回归任务调用的是相同的方法进行训练，分类任务可以看作是取值范围为[-1, +1]的回归任务。基学习器是DecisionTreeRegressionModel。1234567891011121314151617181920212223// Method to train a gradient boo">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-04T05:24:00.488Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Squirren&#39;s Blog">
+<meta name="twitter:title" content="Spark.GBDT学习-GradientBoostedTrees">
+<meta name="twitter:description" content="[TOC]  run方法根据任务类型训练得到一组弱学习器及对应的权重。分类任务(目前只能处理二分类)和回归任务调用的是相同的方法进行训练，分类任务可以看作是取值范围为[-1, +1]的回归任务。基学习器是DecisionTreeRegressionModel。1234567891011121314151617181920212223// Method to train a gradient boo">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/04/Spark.GBDT学习-GradientBoostedTrees/"/>
 
 
 
@@ -131,7 +135,7 @@
   };
 </script>
 
-  <title>Squirren's Blog</title>
+  <title>Spark.GBDT学习-GradientBoostedTrees | Squirren's Blog</title>
   
 
 
@@ -188,8 +192,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -226,7 +229,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
     <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
@@ -318,9 +321,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -352,11 +355,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Spark.GBDT学习-GradientBoostedTrees/" itemprop="url">
-                  Spark.GBDT学习-GradientBoostedTrees
-                </a>
+          <h1 class="post-title" itemprop="name headline">Spark.GBDT学习-GradientBoostedTrees
               
             
           </h1>
@@ -419,9 +418,7 @@
       
 
       
-        
-          
-            <p>[TOC]</p>
+        <p>[TOC]</p>
 <hr>
 <h2 id="run方法"><a href="#run方法" class="headerlink" title="run方法"></a><code>run</code>方法</h2><p>根据任务类型训练得到一组弱学习器及对应的权重。分类任务(目前只能处理二分类)和回归任务调用的是相同的方法进行训练，分类任务可以看作是取值范围为[-1, +1]的回归任务。基学习器是<code>DecisionTreeRegressionModel</code>。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Method to train a gradient boosting model</span></span><br><span class="line"><span class="comment">// @input: 训练数据集, RDD[LabelPoint]</span></span><br><span class="line"><span class="comment">// @input: boosting策略, boostingStrategy</span></span><br><span class="line"><span class="comment">// @input: 随机数种子, seed</span></span><br><span class="line"><span class="comment">// @output: (array of decision tree models, array of model weights)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span></span>(</span><br><span class="line">	input: <span class="type">RDD</span>[<span class="type">LabeledPoint</span>], </span><br><span class="line">	boostingStrategy: <span class="type">OldBoostingStrategy</span>, </span><br><span class="line">	seed: <span class="type">Long</span>): (<span class="type">Array</span>[<span class="type">DecisionTreeRegressionModel</span>], <span class="type">Array</span>[<span class="type">Double</span>]) = &#123;</span><br><span class="line">	<span class="keyword">val</span> algo = boostingStrategy.treeStrategy.algo</span><br><span class="line">	<span class="comment">// 根据boosting策略选择回归还是分类</span></span><br><span class="line">	<span class="comment">// 分类和回归调用的是同一个方法，唯一的区别就是需要将分类任务的label进行转换</span></span><br><span class="line">	algo <span class="keyword">match</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="type">OldAlgo</span>.<span class="type">Regression</span> =&gt;</span><br><span class="line">			<span class="type">GradientBoostedTrees</span>.boost(input, input, boostingStrategy, validate = <span class="literal">false</span>, seed)</span><br><span class="line">		<span class="keyword">case</span> <span class="type">OldAlgo</span>.<span class="type">Classification</span> =&gt;</span><br><span class="line">			<span class="comment">// 分类任务, 需要先将label映射为-1, +1. 这样二分类就可以看作是[-1, +1]的回归问题</span></span><br><span class="line">			<span class="keyword">val</span> remappedInput = input.map(x =&gt; <span class="keyword">new</span> <span class="type">LabeledPoint</span>((x.label * <span class="number">2</span>) - <span class="number">1</span>, x.features))</span><br><span class="line">	    	<span class="type">GradientBoostedTrees</span>.boost(remappedInput, remappedInput, boostingStrategy, validate = <span class="literal">false</span>, seed)</span><br><span class="line">		<span class="keyword">case</span> _ =&gt;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalArgumentException</span>(<span class="string">s"<span class="subst">$algo</span> is not supported by gradient boosting."</span>) </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="runWithValidation方法"><a href="#runWithValidation方法" class="headerlink" title="runWithValidation方法"></a><code>runWithValidation</code>方法</h2><p>基于验证集的训练方法。同<code>run</code>方法唯一的区别就是增加了验证集。验证集要和训练集不同并且符合相同的分布(e.g.通过<code>randomSplit</code>方法得到的两个数据集)。验证集的功能就是：</p>
@@ -443,8 +440,6 @@
 <li style="list-style: none"><input type="checkbox"> 为什么学习率作为权重对于平方误差来说是正确的？对于其他损失函数不是最优的但是是合理的？</li>
 </ul>
 
-          
-        
       
     </div>
 
@@ -464,156 +459,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Squirren">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Squirren's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
+              <a href="/2018/07/04/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-04 11:44:52" itemprop="dateCreated datePublished" datetime="2018-07-04T11:44:52+08:00">2018-07-04</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -623,14 +490,19 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -651,8 +523,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -697,6 +578,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#run方法"><span class="nav-number">1.</span> <span class="nav-text">run方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#runWithValidation方法"><span class="nav-number">2.</span> <span class="nav-text">runWithValidation方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computeInitialPredictionAndError方法"><span class="nav-number">3.</span> <span class="nav-text">computeInitialPredictionAndError方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#updatePrediction方法"><span class="nav-number">4.</span> <span class="nav-text">updatePrediction方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#updatePredictionError方法"><span class="nav-number">5.</span> <span class="nav-text">updatePredictionError方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computeError方法"><span class="nav-number">6.</span> <span class="nav-text">computeError方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#evaluateEachIteration方法"><span class="nav-number">7.</span> <span class="nav-text">evaluateEachIteration方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boost方法"><span class="nav-number">8.</span> <span class="nav-text">boost方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">9.</span> <span class="nav-text">TODO</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -824,6 +721,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
