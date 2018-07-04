@@ -335,7 +335,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Spark.GBDT学习-GBTClassifier/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Squirren">
@@ -354,8 +354,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/04/hello-world/" itemprop="url">
-                  Hello World
+                <a class="post-title-link" href="/2018/07/04/Spark.GBDT学习-GBTClassifier/" itemprop="url">
+                  Spark.GBDT学习-GBTClassifier
                 </a>
               
             
@@ -381,16 +381,32 @@
                 
               
 
-              <time title="创建时间：2018-07-04 11:44:52" itemprop="dateCreated datePublished" datetime="2018-07-04T11:44:52+08:00">2018-07-04</time>
+              <time title="创建时间：2018-07-04 15:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T15:46:25+08:00">2018-07-04</time>
             
 
             
           </span>
 
           
-
-          
+            <span class="post-category" >
             
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
           
 
           
@@ -417,15 +433,81 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+            <blockquote>
+<p>用于分类的GBT(Gradient-Boosted Trees)算法，基于<em>J.H. Friedman. “Stochastic Gradient Boosting”</em>实现，目前不支持多分类任务。Gradient Boosting vs. TreeBoost:</p>
+<ul>
+<li>本实现基于<strong>Stochastic Gradient Boosting</strong>(随机梯度提升)，而不是<strong>TreeBoost</strong></li>
+<li>两种方法都是通过最小化损失函数，学习树的集成</li>
+<li><strong>TreeBoost</strong>方法相对于原始方法，基于损失函数对叶节点的输出进行了额外的修改</li>
+<li>Spark考虑未来实现<strong>TreeBoost</strong></li>
+</ul>
+</blockquote>
+<h2 id="GBTClassifier类"><a href="#GBTClassifier类" class="headerlink" title="GBTClassifier类"></a><code>GBTClassifier</code>类</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>一个唯一标识uid，继承了<code>Predictor</code>类，继承了<code>GBTClassifierParams</code>、<code>DefaultParamsWritable</code>、<code>Logging</code>特质。其中<code>Predictor</code>中的三个元素分别代表: <strong>特征类型、学习器、学习到用于预测的模型</strong>。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GBTClassifier</span>(<span class="params">override val uid: <span class="type">String</span></span>) </span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">Predictor</span>[<span class="type">Vector</span>, <span class="type">GBTClassifier</span>, <span class="type">GBTClassificationModel</span>] </span></span><br><span class="line"><span class="class"><span class="keyword">with</span> <span class="title">GBTClassifierParams</span> <span class="keyword">with</span> <span class="title">DefaultParamsWritable</span> <span class="keyword">with</span> <span class="title">Logging</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">this</span></span>() = <span class="keyword">this</span>(<span class="type">Identifiable</span>.randomUID(<span class="string">"gbtc"</span>))</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>为了兼容JAVA API，覆盖了继承自特质(with trait)的参数setter方法。</p>
+<ol>
+<li><code>TreeClassifierParams</code>参数</li>
+</ol>
+<ul>
+<li><strong>maxDepth</strong><br>树的最大深度，0意味着只有一个叶节点，1意味着有一个内部节点+两个叶节点。<br>支持：&gt;=0<br>默认：5</li>
+<li><strong>maxBins</strong><br>用于离散连续特征的最大分桶数，用于每个节点特征分裂时分裂点的选择，分桶数越大意味着粒度越高。<br>支持：&gt;=2并且&gt;=任一类别特征的分类数<br>默认：32</li>
+<li><strong>minInstancesPerNode</strong><br>分裂后每个子节点含有的最小样本数，如果分裂后左孩子或右孩子含有的样本数少于该值，则该分裂无效。<br>支持：&gt;=1<br>默认：1</li>
+<li><strong>minInfoGain</strong><br>树节点分裂时的最小信息增益。<br>支持：&gt;=0.0<br>默认：0.0</li>
+<li><strong>maxMemoryInMB</strong><br>每次会对一组节点进行切分，分组是按照树的层次逐步进行。每组需要切分的节点个数视内存大小而定，如果内存太小，每次只能切分一个节点。单位MB<br>默认：256MB</li>
+<li><strong>cacheNodeIds</strong><br>如果为true，算法会为每个实例缓存树节点ID；如果为false，算法会将树传递给执行器用于匹配实例和树节点。缓存有利于加速训练深度较大的树，用户可以通过参数<em>checkpointInterval</em>设置缓存被检查的频率或者不检查。<br>默认：false</li>
+<li><strong>checkpointInterval</strong><br>表示缓存的树节点ID的检查频率，当<em>cacheNodeIds</em>为true并且检查目录(checkpoint directory)通过sparkContext设置过才有效。<br>支持：&gt;=1或者-1代表不检查，10意味着每10次迭代检查一次。<br>默认：10</li>
+<li><strong>impurity</strong><br>用于计算信息增益的准则。不支持通过GBTClassifier.setImpurity方法设置该值。<br>支持：entropy、gini<br>默认：gini</li>
+</ul>
+<ol start="2">
+<li><code>TreeEnsembleParams</code>参数</li>
+</ol>
+<ul>
+<li><strong>subsamplingRate</strong><br>每一次迭代训练基学习器(决策树)时所使用的训练数据集的百分比。<br>支持：(0, 1]<br>默认：1.0</li>
+<li><strong>seed</strong><br>随机数种子<br>默认：this.getClass.getName.hashCode.toLong</li>
+</ul>
+<ol start="3">
+<li><code>GBTParams</code>参数</li>
+</ol>
+<ul>
+<li><strong>maxIter</strong><br>最大迭代次数<br>支持：&gt;=0<br>默认：20</li>
+<li><strong>stepSize</strong><br>学习率(learning rate/step size)参数，用于缩小(shrinking)每个基学习器的贡献。<br>支持：(0, 1]<br>默认：0.1</li>
+</ul>
+<ol start="4">
+<li><code>GBTClassifierParams</code>参数</li>
+</ol>
+<ul>
+<li><strong>lossType</strong><br>GBT最小化的损失函数，不区分大小写。<br>支持：logistic<br>默认：logistic<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3></li>
+</ul>
+<ol>
+<li><code>copy</code>方法<br>GBTClassifier的拷贝函数。</li>
+<li><code>train</code>方法<br><code>GBTClassifier</code>类的主要方法，用于训练得到学习好的用于预测的模型。<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @input: 训练数据, DataSet</span></span><br><span class="line"><span class="comment">// @output: 学习到的模型, GBTClassificationModel</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">train</span></span>(dataset: <span class="type">Dataset</span>[_]):</span><br><span class="line"><span class="type">GBTClassificationModel</span> = &#123;</span><br><span class="line">	<span class="comment">// 得到类别特征</span></span><br><span class="line">	<span class="keyword">val</span> categoricalFeatures: <span class="type">Map</span>[<span class="type">Int</span>, <span class="type">Int</span>] =</span><br><span class="line">	<span class="type">MetadataUtils</span>.getCategoricalFeatures(dataset.schema($(featuresCol)))</span><br><span class="line">	<span class="comment">// 转换训练数据并进行验证</span></span><br><span class="line">	<span class="comment">// 将DataSet转换成RDD[LabeledPoint]</span></span><br><span class="line">	<span class="comment">// 只支持二分类，要求label为0或1</span></span><br><span class="line">	<span class="keyword">val</span> oldDataset: <span class="type">RDD</span>[<span class="type">LabeledPoint</span>] =</span><br><span class="line">		dataset.select(col($(labelCol)), col($(featuresCol))).rdd.map &#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="type">Row</span>(label: <span class="type">Double</span>, features: <span class="type">Vector</span>) =&gt;</span><br><span class="line">				require(label == <span class="number">0</span> || label == <span class="number">1</span>, <span class="string">s"GBTClassifier was given dataset with invalid label <span class="subst">$label</span>.  Labels must be in &#123;0,1&#125;; note that GBTClassifier currently only supports binary classification."</span>)</span><br><span class="line">			<span class="type">LabeledPoint</span>(label, features)</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="comment">// 获得特征个数及boosting策略</span></span><br><span class="line">	<span class="keyword">val</span> numFeatures = oldDataset.first().features.size</span><br><span class="line">	<span class="keyword">val</span> boostingStrategy = <span class="keyword">super</span>.getOldBoostingStrategy(categoricalFeatures, <span class="type">OldAlgo</span>.<span class="type">Classification</span>)</span><br><span class="line">	<span class="comment">// 用于记录日志</span></span><br><span class="line">	<span class="keyword">val</span> instr = <span class="type">Instrumentation</span>.create(<span class="keyword">this</span>, oldDataset)</span><br><span class="line">	instr.logParams(params: _*)</span><br><span class="line">	instr.logNumFeatures(numFeatures)</span><br><span class="line">	instr.logNumClasses(<span class="number">2</span>)</span><br><span class="line">	<span class="comment">// 调用GradientBoostedTrees训练得到一组学习器及其权重</span></span><br><span class="line">	<span class="keyword">val</span> (baseLearners, learnerWeights) = <span class="type">GradientBoostedTrees</span>.run(oldDataset, boostingStrategy, $(seed))</span><br><span class="line">	<span class="comment">// 将学到的模型封装成GBTClassificationModel并返回</span></span><br><span class="line">	<span class="keyword">val</span> m = <span class="keyword">new</span> <span class="type">GBTClassificationModel</span>(uid, baseLearners, learnerWeights, numFeatures)</span><br><span class="line">    instr.logSuccess(m)</span><br><span class="line">	m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="GBTClassifier对象"><a href="#GBTClassifier对象" class="headerlink" title="GBTClassifier对象"></a><code>GBTClassifier</code>对象</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GBTClassifier</span> <span class="keyword">extends</span> <span class="title">DefaultParamsReadable</span>[<span class="type">GBTClassifier</span>] </span>&#123;</span><br><span class="line">	<span class="comment">// final变量，访问支持的损失函数类型</span></span><br><span class="line">	<span class="keyword">final</span> <span class="keyword">val</span> supportedLossTypes: <span class="type">Array</span>[<span class="type">String</span>] = <span class="type">GBTClassifierParams</span>.supportedLossTypes</span><br><span class="line">	<span class="comment">// 从目录中加载GBTClassifier</span></span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">load</span></span>(path: <span class="type">String</span>): <span class="type">GBTClassifier</span> = <span class="keyword">super</span>.load(path)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="GBTClassificationModel类"><a href="#GBTClassificationModel类" class="headerlink" title="GBTClassificationModel类"></a><code>GBTClassificationModel</code>类</h2><p>用于分类的GBT模型，仅支持二分类，支持连续特征和类别特征。</p>
+<h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>继承了<code>PredictionModel</code>类以及多个特质，其中<code>PredictionModel</code>的两个元素分别代表<strong>特征类型、学习到用于预测的模型</strong>。<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GBTClassificationModel</span> <span class="title">private</span>[ml](<span class="params"></span></span></span><br><span class="line"><span class="class"><span class="params">	override val uid: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="class"><span class="params">	private val _trees: <span class="type">Array</span>[<span class="type">DecisionTreeRegressionModel</span>],</span></span></span><br><span class="line"><span class="class"><span class="params">	private val _treeWeights: <span class="type">Array</span>[<span class="type">Double</span>],</span></span></span><br><span class="line"><span class="class"><span class="params">	override val numFeatures: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">PredictionModel</span>[<span class="type">Vector</span>, <span class="type">GBTClassificationModel</span>]</span></span><br><span class="line"><span class="class"><span class="keyword">with</span> <span class="title">GBTClassifierParams</span> </span></span><br><span class="line"><span class="class"><span class="keyword">with</span> <span class="title">TreeEnsembleModel</span>[<span class="type">DecisionTreeRegressionModel</span>]</span></span><br><span class="line"><span class="class"><span class="keyword">with</span> <span class="title">MLWritable</span> <span class="keyword">with</span> <span class="title">Serializable</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="comment">// 检查_trees.nonEmpty</span></span><br><span class="line">	<span class="comment">// 检查_trees.length == _treeWeights.length</span></span><br><span class="line">	<span class="keyword">val</span> numTrees: <span class="type">Int</span> = _trees.length</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="方法-1"><a href="#方法-1" class="headerlink" title="方法"></a>方法</h3><ol>
+<li><p><code>transformImpl</code>方法<br>首先将<code>GBTClassificationModel</code>进行广播，然后通过udf进行预测数据，udf中调用<code>predict</code>方法实现。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">transformImpl</span></span>(dataset: <span class="type">Dataset</span>[_]): <span class="type">DataFrame</span> = &#123;</span><br><span class="line">	<span class="comment">// 广播本类</span></span><br><span class="line">	<span class="keyword">val</span> bcastModel = dataset.sparkSession.sparkContext.broadcast(<span class="keyword">this</span>)</span><br><span class="line">	<span class="keyword">val</span> predictUDF = udf &#123; (features: <span class="type">Any</span>) =&gt;</span><br><span class="line">		<span class="comment">// udf通过本类的predict方法实现</span></span><br><span class="line">		bcastModel.value.predict(features.asInstanceOf[<span class="type">Vector</span>])</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 使用udf将特征数据转换成预测数据</span></span><br><span class="line">	dataset.withColumn($(predictionCol), predictUDF(col($(featuresCol))))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>predict</code>方法<br><strong>关键的预测方法</strong>，先得到每个基学习器的预测值，然后进行融合得到最终的预测结果，最后得到类别结果。可以看到这里得到的预测值不是概率而是类别0/1，因为label被转换成了-1/+1，所以这里通过<em>prediction&gt;0.0</em>得到预测lebel。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">predict</span></span>(features: <span class="type">Vector</span>): <span class="type">Double</span> = &#123;</span><br><span class="line">	<span class="comment">// 得到每棵树的预测结果</span></span><br><span class="line">	<span class="keyword">val</span> treePredictions = _trees.map(_.rootNode.predictImpl(features).prediction)</span><br><span class="line">	<span class="comment">// 乘以权重之后求和得到融合结果</span></span><br><span class="line">	<span class="keyword">val</span> prediction = blas.ddot(numTrees, treePredictions, <span class="number">1</span>, _treeWeights, <span class="number">1</span>)</span><br><span class="line">	<span class="comment">// 得到预测lebel</span></span><br><span class="line">	<span class="keyword">if</span> (prediction &gt; <span class="number">0.0</span>) <span class="number">1.0</span> <span class="keyword">else</span> <span class="number">0.0</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>copy</code>方法<br><code>GBTClassificationModel</code>的拷贝方法。</p>
+</li>
+<li><p><code>toOld</code>方法<br>将ml的模型转换成mllib中老的API，ml域的私有方法。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[ml] <span class="function"><span class="keyword">def</span> <span class="title">toOld</span></span>: <span class="type">OldGBTModel</span> = &#123;</span><br><span class="line">	<span class="keyword">new</span> <span class="type">OldGBTModel</span>(<span class="type">OldAlgo</span>.<span class="type">Classification</span>, _trees.map(_.toOld), _treeWeights)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>write</code>方法<br>调用<code>GBTClassificationModel</code>对象的方法保存本模型。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">write</span></span>: <span class="type">MLWriter</span> = <span class="keyword">new</span> <span class="type">GBTClassificationModel</span>.<span class="type">GBTClassificationModelWriter</span>(<span class="keyword">this</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="GBTClassificationModel对象"><a href="#GBTClassificationModel对象" class="headerlink" title="GBTClassificationModel对象"></a><code>GBTClassificationModel</code>对象</h2><ol>
+<li><code>fromOld</code>方法<br>从老的API中转换出当前模型</li>
+<li><code>GBTClassificationModelReader</code>类<br>私有类，其中的<code>load</code>方法用于从目录中读取模型</li>
+<li><code>GBTClassificationModelWriter</code>类<br>私有类，其中的<code>saveImpl</code>方法用于将本模型保存</li>
+<li><code>read</code>方法<br>新建<code>GBTClassificationModelReader</code>类</li>
+<li><code>load</code>方法</li>
+</ol>
 
           
         
