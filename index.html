@@ -381,13 +381,9 @@
                 
               
 
-              <time title="创建时间：2018-07-04 17:46:25 / 修改时间：15:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T17:46:25+08:00">2018-07-04</time>
+              <time title="创建时间：2018-07-04 17:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T17:46:25+08:00">2018-07-04</time>
             
 
-            
-              
-
-              
             
           </span>
 
@@ -441,14 +437,14 @@
 <p>Spark.ML中的GBT分类/回归算法的总结。分类和回归任务的区别在于损失函数和基学习器(决策树)不纯度计算准则不同，分类问题被当作label为-1/+1的回归问题处理。分类问题不能得到预测概率，只能得到预测label，原始预测结果通过和阈值0比较得到预测label。</p>
 </blockquote>
 <h2 id="GBT参数"><a href="#GBT参数" class="headerlink" title="GBT参数"></a>GBT参数</h2><p><code>GBTRegressor</code>和<code>GBTClassifier</code>分别继承了<code>GBTxxxParams</code>参数，该参数又继承了多个参数。所以最终GBT的参数如下图所示。</p>
-<p><img src="Spark.GBDT学习-GBT总结/1.png" width="80%" height="80%" align="center"></p>
+<p><img src="/2018/07/04/Spark.GBDT学习-GBT总结/1.png" width="80%" height="80%" align="center"></p>
 <ol>
 <li><code>GBTxxxParams</code><br>分类和回归任务分别设置了<code>lossType</code></li>
 <li><code>TreexxxParams</code><br>分类和回归分别设置了基学习器的<code>impurity</code></li>
 <li><code>GBTParams</code><br>设置<code>maxIter</code>和<code>stepSize</code></li>
 <li><code>TreeEnsembleParams</code><br>设置<code>subsamplingRate</code></li>
 </ol>
-<h2 id="GBT过程"><a href="#GBT过程" class="headerlink" title="GBT过程"></a>GBT过程</h2><p><img src="Spark.GBDT学习-GBT总结/2.png" width="80%" height="80%" align="center"></p>
+<h2 id="GBT过程"><a href="#GBT过程" class="headerlink" title="GBT过程"></a>GBT过程</h2><p><img src="/2018/07/04/Spark.GBDT学习-GBT总结/2.png" width="80%" height="80%" align="center"></p>
 <ol>
 <li>两个方法都是调用<code>GradientBoostedTrees.run</code>方法训练，得到对应的预测模型。</li>
 <li>分类问题会在该方法中通过将label转换成-1/+1，将分类问题当作回归问题进行。</li>
@@ -553,7 +549,7 @@
                 
               
 
-              <time title="创建时间：2018-07-04 15:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T15:46:25+08:00">2018-07-04</time>
+              <time title="创建时间：2018-07-04 16:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T16:46:25+08:00">2018-07-04</time>
             
 
             
