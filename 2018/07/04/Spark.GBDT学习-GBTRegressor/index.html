@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征  GBTRegressor类定义一个唯一标识uid，继承Predictor类，继承了GBTRegressorParams特质，该特质又继承了GBTParams和TreeRegressorParams。 1">
+  <meta name="description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
 <meta name="keywords" content="Spark,GBDT">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark.GBDT学习-GBTRegressor">
 <meta property="og:url" content="http://yoursite.com/2018/07/04/Spark.GBDT学习-GBTRegressor/index.html">
 <meta property="og:site_name" content="Squirren&#39;s Blog">
-<meta property="og:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征  GBTRegressor类定义一个唯一标识uid，继承Predictor类，继承了GBTRegressorParams特质，该特质又继承了GBTParams和TreeRegressorParams。 1">
+<meta property="og:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-07-04T08:46:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark.GBDT学习-GBTRegressor">
-<meta name="twitter:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征  GBTRegressor类定义一个唯一标识uid，继承Predictor类，继承了GBTRegressorParams特质，该特质又继承了GBTParams和TreeRegressorParams。 1">
+<meta name="twitter:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
 
 
 
@@ -434,6 +434,7 @@
         <blockquote>
 <p>用于回归的GBT(Gradient-Boosted Trees)算法，基于<em>J.H. Friedman. “Stochastic Gradient Boosting”</em>实现，支持连续特征和类别特征</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="GBTRegressor类"><a href="#GBTRegressor类" class="headerlink" title="GBTRegressor类"></a><code>GBTRegressor</code>类</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>一个唯一标识uid，继承<code>Predictor</code>类，继承了<code>GBTRegressorParams</code>特质，该特质又继承了<code>GBTParams</code>和<code>TreeRegressorParams</code>。</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GBTRegressor</span> (<span class="params">override val uid: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class">	<span class="keyword">extends</span> <span class="title">Predictor</span>[<span class="type">Vector</span>, <span class="type">GBTRegressor</span>, <span class="type">GBTRegressionModel</span>]</span></span><br><span class="line"><span class="class">	<span class="keyword">with</span> <span class="title">GBTRegressorParams</span> <span class="keyword">with</span> <span class="title">DefaultParamsWritable</span> <span class="keyword">with</span> <span class="title">Logging</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">this</span></span>() = <span class="keyword">this</span>(<span class="type">Identifiable</span>.randomUID(<span class="string">"gbtr"</span>))</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>同<code>GBTClassifier</code>的参数一样，分类和回归的默认参数只有<code>impurity</code>和<code>lossType</code>不同</p>
