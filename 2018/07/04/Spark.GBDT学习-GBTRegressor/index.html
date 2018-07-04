@@ -439,7 +439,9 @@
 <h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>同<code>GBTClassifier</code>的参数一样，分类和回归的默认参数只有<code>impurity</code>和<code>lossType</code>不同</p>
 <ol>
 <li><code>impurity</code>参数<br>支持：variance<br>默认：variance</li>
-<li><code>lossType</code>参数<br>支持：squared(L2)、absolute(L1)<br>默认：squared<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3></li>
+<li><code>lossType</code>参数<br>支持：squared(L2)、absolute(L1)<br>默认：squared</li>
+</ol>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ol>
 <li><code>copy</code>方法<br><code>GBTRegressor</code>的拷贝函数。</li>
 <li><code>train</code>方法<br><code>GBTRegressor</code>类的主要方法，和<code>GBTClassifier</code>基本相同，底层都是调用<code>GradientBoostedTrees</code>实现，只是对label没有要求。</li>
 </ol>
