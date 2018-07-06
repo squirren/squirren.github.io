@@ -112,25 +112,25 @@
 <meta name="keywords" content="TensorFlow,深度学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TensorFlow小练习1-预测标普500指数">
-<meta property="og:url" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/index.html">
+<meta property="og:url" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/index.html">
 <meta property="og:site_name" content="Squirren&#39;s Blog">
 <meta property="og:description" content="TensorFlow小练习系列旨在通过一些练习学习TensorFlow的使用及原理。本文翻译整理自原文，他们通过Google金融API抓取了标普500的分钟级数据，数据包括标普500指数和500个组成股的股价。尝试通过deep learning模型基于500个组成股的股价预测一分钟后的标普500指数。本文并没有深入讲解原理，仅仅是通过例子讲解了使用TensorFlow创建深度学习模型的过程。创建的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/1.png">
-<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/2.png">
-<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/3.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/1.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/2.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/3.png">
 <meta property="og:updated_time" content="2018-07-06T09:33:15.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow小练习1-预测标普500指数">
 <meta name="twitter:description" content="TensorFlow小练习系列旨在通过一些练习学习TensorFlow的使用及原理。本文翻译整理自原文，他们通过Google金融API抓取了标普500的分钟级数据，数据包括标普500指数和500个组成股的股价。尝试通过deep learning模型基于500个组成股的股价预测一分钟后的标普500指数。本文并没有深入讲解原理，仅仅是通过例子讲解了使用TensorFlow创建深度学习模型的过程。创建的">
-<meta name="twitter:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/1.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/"/>
 
 
 
@@ -343,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测股票价格/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/TensorFlow小练习1-预测标普500指数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Squirren">
@@ -458,7 +458,7 @@
 </blockquote>
 <h1 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h1><p>数据集中包含2017年4月到8月的标普500指数及组成股股价的分钟级数据，共41266条数据，并且保存成了csv格式。数据已经做过清洗，股票价格及指数已经通过LOCF方法进行了缺失值填充。数据集中的标普500指数做了一分钟的偏移，也就是说数据集中的每一行数据都是t时刻的组成股股价和t+1时刻的标普500指数。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data = pd.read_csv(<span class="string">'data_stocks.csv'</span>)</span><br><span class="line">data = data.drop([<span class="string">'DATE'</span>], <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 数据的维度</span></span><br><span class="line">(n, p) = data.shape</span><br><span class="line"><span class="comment"># 查看标普500指数时序图</span></span><br><span class="line">plt.plot(data[<span class="string">'SP500'</span>])</span><br><span class="line"><span class="comment"># 将数据转换成二维数组np.array</span></span><br><span class="line">data = data.values</span><br></pre></td></tr></table></figure>
-<p><img src="/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/1.png" width="80%" height="80%" align="center"></p>
+<p><img src="/2018/07/05/TensorFlow小练习1-预测标普500指数/1.png" width="80%" height="80%" align="center"></p>
 <h1 id="划分训练数据和测试数据"><a href="#划分训练数据和测试数据" class="headerlink" title="划分训练数据和测试数据"></a>划分训练数据和测试数据</h1><p>将数据集水平划分(没有经过洗牌)为训练集和测试集，训练集含有80%的数据(4月到7月底)，测试集含有20%的数据(到8月底)。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">train_start = <span class="number">0</span></span><br><span class="line">train_end = int(np.floor(<span class="number">0.8</span>*n))</span><br><span class="line">test_start = train_end</span><br><span class="line">test_end = n</span><br><span class="line">data_train = data[np.arange(train_start, train_end), :]</span><br><span class="line">data_test = data[np.arange(test_start, test_end), :]</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -468,7 +468,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 缩放数据</span></span><br><span class="line">scaler = MinMaxScaler(feature_range=(<span class="number">-1</span>, <span class="number">1</span>))</span><br><span class="line">scaler.fit(data_train)</span><br><span class="line">data_train = scaler.transform(data_train)</span><br><span class="line">data_test = scaler.transform(data_test)</span><br><span class="line"><span class="comment"># 创建x、y</span></span><br><span class="line">X_train = data_train[:, <span class="number">1</span>:]</span><br><span class="line">y_train = data_train[:, <span class="number">0</span>]</span><br><span class="line">X_test = data_test[:, <span class="number">1</span>:]</span><br><span class="line">y_test = data_test[:, <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
 <p>要注意对哪部分数据以及什么时候进行缩放。常见的错误是对整个数据集进行缩放然后再进行训练集测试集划分，因为现实中进行预测时，并不知道未来的时间序列观测值。所以缩放的统计(min/max)要在训练集上进行，然后再用于测试集。预测时使用未来的信息将会导致预测指标向好的方向偏移。</p>
 <h1 id="TensorFlow介绍"><a href="#TensorFlow介绍" class="headerlink" title="TensorFlow介绍"></a>TensorFlow介绍</h1><p>TensorFlow是目前常用的深度学习以及神经网络计算框架。TensorFlow通过图描述计算任务，这种方法允许用户将数据运算指定为图中的数据、变量和操作符。因为神经网络实际上就是数据和数学运算组成的图，所以TensorFlow可以很好的用于深度学习以及神经网络。</p>
-<p><img src="/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/2.png" width="60%" height="60%" align="center"></p>
+<p><img src="/2018/07/05/TensorFlow小练习1-预测标普500指数/2.png" width="60%" height="60%" align="center"></p>
 <p>上图展示了两个数相加的过程，这两个数存储在a、b两个变量里。然后沿着图到达方形节点，在这里他们完成相加，然后结果被存储在另一个变量c里。实际上a、b、c可以看作占位符(placeholder)，任何喂入a、b的数都会相加然后存储在c中。这就是TensorFlow如何工作的，用户可以通过占位符(placeholder)和变量(variable)定义模型的抽象表示，然后占位符被喂给真实数据，之后进行真实的计算过程。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="comment"># 定义占位符a、b</span></span><br><span class="line">a = tf.placeholder(dtype=tf.int8)</span><br><span class="line">b = tf.placeholder(dtype=tf.int8)</span><br><span class="line"><span class="comment"># 定义加法</span></span><br><span class="line">c = tf.add(a, b)</span><br><span class="line"><span class="comment"># 初始化图</span></span><br><span class="line">graph = tf.Session()</span><br><span class="line"><span class="comment"># run the graph</span></span><br><span class="line">graph.run(c, feed_dict=&#123;a: <span class="number">5</span>, b: <span class="number">4</span>&#125;)</span><br></pre></td></tr></table></figure></p>
 <h2 id="Placeholders"><a href="#Placeholders" class="headerlink" title="Placeholders"></a>Placeholders</h2><p>如上所述，TensorFlow都是以占位符开始。我们需要两个占位符: X表示网络的输入(t时刻500个组成股的股价)；Y表示网络的输出(t+1时刻标普500指数)。输入是2维的矩阵，输出是1维的向量，设计神经网络时需要知道输入输出的维数。None表示当前我们还不知道每次流入神经网络的观测值的数量，所以我们保持灵活性。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Placeholder</span></span><br><span class="line">X = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, n_stocks])</span><br><span class="line">Y = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>])</span><br></pre></td></tr></table></figure>
@@ -478,7 +478,7 @@
 <h2 id="网络结构设计"><a href="#网络结构设计" class="headerlink" title="网络结构设计"></a>网络结构设计</h2><p>定义了需要的权重和偏差变量之后，我们需要确定网络结构，也就是占位符(数据)和变量(权重偏差)怎么结合成一个顺序矩阵乘法系统。而且网络的隐藏层需要被激活函数进行转换。激活函数是网络结构的重要组成部分，因为它们为系统引入了非线性。目前有十几个可选的激活函数，其中最常用的是ReLU。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 隐藏层 矩阵相乘之后加上偏差 然后通过激活函数</span></span><br><span class="line">hidden_1 = tf.nn.relu(tf.add(tf.matmul(X, W_hidden_1), bias_hidden_1))</span><br><span class="line">hidden_2 = tf.nn.relu(tf.add(tf.matmul(hidden_1, W_hidden_2), bias_hidden_2))</span><br><span class="line">hidden_3 = tf.nn.relu(tf.add(tf.matmul(hidden_2, W_hidden_3), bias_hidden_3))</span><br><span class="line">hidden_4 = tf.nn.relu(tf.add(tf.matmul(hidden_3, W_hidden_4), bias_hidden_4))</span><br><span class="line"><span class="comment"># 输出层 对结果做了转置</span></span><br><span class="line">out = tf.transpose(tf.add(tf.matmul(hidden_4, W_out), bias_out))</span><br></pre></td></tr></table></figure>
 <p>下图展示了们的网络结构，模型主要包含3个组成部分：输入层、隐藏层、输出层，这个结构叫做前馈网络(feedforward)。前馈网络表示数据仅从左侧流向右侧，其它的网络结构比如RNN允许数据倒流。</p>
-<p><img src="/2018/07/05/TensorFlow小练习1-预测股票价格/TensorFlow小练习1-预测标普500指数/3.png" width="90%" height="90%" align="center"></p>
+<p><img src="/2018/07/05/TensorFlow小练习1-预测标普500指数/3.png" width="90%" height="90%" align="center"></p>
 <h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>损失函数用于测量网络预测值和真实观测值之间的差距，对于回归问题通常使用MSE(mean squared error)。任何能够测量预测值与观测值之间的差距的函数都可以用作损失函数，但是MSE拥有解决一般优化问题的优势。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cost function</span></span><br><span class="line">mse = tf.reduce_mean(tf.squared_difference(out, Y))</span><br></pre></td></tr></table></figure>
 <h2 id="Optimizer"><a href="#Optimizer" class="headerlink" title="Optimizer"></a>Optimizer</h2><p>训练过程中为了修改权重和偏差需要进行大量的计算，从而得到我们想要的梯度。为了最小化网络的损失函数，权重和偏差需要沿着负梯度方向进行改变。稳定并且快速的优化器是深度学习和神经网络的重要研究领域。我们使用的是Adam优化器，它是目前深度学习的默认优化器。Adam可以认为是另外两个比较流行的优化器AdaGrad和RMSProp的结合。</p>
