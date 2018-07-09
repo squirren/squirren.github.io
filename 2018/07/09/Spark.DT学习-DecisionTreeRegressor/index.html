@@ -108,25 +108,25 @@
 
 
 
-  <meta name="description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
-<meta name="keywords" content="Spark,GBDT">
+  <meta name="description" content="本文学习Spark.ML下的决策树回归算法，代码基于Scala-2.11和Spark-2.1.0。用于回归的决策树算法支持连续特征和类别特征。该方法和决策树分类算法很像，这里只阐述它们的不同之处，相同之处可以参考博文Spark.DT学习-DecisionTreeClassifier。">
+<meta name="keywords" content="Spark">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spark.GBDT学习-GBTRegressor">
-<meta property="og:url" content="http://yoursite.com/2018/07/04/Spark.GBDT学习-GBTRegressor/index.html">
+<meta property="og:title" content="Spark.DT学习-DecisionTreeRegressor">
+<meta property="og:url" content="http://yoursite.com/2018/07/09/Spark.DT学习-DecisionTreeRegressor/index.html">
 <meta property="og:site_name" content="Squirren&#39;s Blog">
-<meta property="og:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
+<meta property="og:description" content="本文学习Spark.ML下的决策树回归算法，代码基于Scala-2.11和Spark-2.1.0。用于回归的决策树算法支持连续特征和类别特征。该方法和决策树分类算法很像，这里只阐述它们的不同之处，相同之处可以参考博文Spark.DT学习-DecisionTreeClassifier。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-07-04T08:46:25.000Z">
+<meta property="og:updated_time" content="2018-07-09T07:08:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spark.GBDT学习-GBTRegressor">
-<meta name="twitter:description" content="用于回归的GBT(Gradient-Boosted Trees)算法，基于J.H. Friedman. “Stochastic Gradient Boosting”实现，支持连续特征和类别特征">
+<meta name="twitter:title" content="Spark.DT学习-DecisionTreeRegressor">
+<meta name="twitter:description" content="本文学习Spark.ML下的决策树回归算法，代码基于Scala-2.11和Spark-2.1.0。用于回归的决策树算法支持连续特征和类别特征。该方法和决策树分类算法很像，这里只阐述它们的不同之处，相同之处可以参考博文Spark.DT学习-DecisionTreeClassifier。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/04/Spark.GBDT学习-GBTRegressor/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/09/Spark.DT学习-DecisionTreeRegressor/"/>
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>Spark.GBDT学习-GBTRegressor | Squirren's Blog</title>
+  <title>Spark.DT学习-DecisionTreeRegressor | Squirren's Blog</title>
   
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Spark.GBDT学习-GBTRegressor/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/09/Spark.DT学习-DecisionTreeRegressor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Squirren">
@@ -356,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spark.GBDT学习-GBTRegressor
+          <h1 class="post-title" itemprop="name headline">Spark.DT学习-DecisionTreeRegressor
               
             
           </h1>
@@ -381,7 +381,7 @@
                 
               
 
-              <time title="创建时间：2018-07-04 16:46:25" itemprop="dateCreated datePublished" datetime="2018-07-04T16:46:25+08:00">2018-07-04</time>
+              <time title="创建时间：2018-07-09 15:08:25" itemprop="dateCreated datePublished" datetime="2018-07-09T15:08:25+08:00">2018-07-09</time>
             
 
             
@@ -431,29 +431,12 @@
       
 
       
-        <blockquote>
-<p>用于回归的GBT(Gradient-Boosted Trees)算法，基于<em>J.H. Friedman. “Stochastic Gradient Boosting”</em>实现，支持连续特征和类别特征</p>
-</blockquote>
+        <p>本文学习Spark.ML下的决策树回归算法，代码基于Scala-2.11和Spark-2.1.0。用于回归的决策树算法支持连续特征和类别特征。该方法和决策树分类算法很像，这里只阐述它们的不同之处，相同之处可以参考博文<a href="https://squirren.github.io/2018/07/09/Spark.DT%E5%AD%A6%E4%B9%A0-DecisionTreeClassifier/" target="_blank" rel="noopener">Spark.DT学习-DecisionTreeClassifier</a>。</p>
 <a id="more"></a>
-<h2 id="GBTRegressor类"><a href="#GBTRegressor类" class="headerlink" title="GBTRegressor类"></a><code>GBTRegressor</code>类</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>一个唯一标识uid，继承<code>Predictor</code>类，继承了<code>GBTRegressorParams</code>特质，该特质又继承了<code>GBTParams</code>和<code>TreeRegressorParams</code>。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GBTRegressor</span> (<span class="params">override val uid: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class">	<span class="keyword">extends</span> <span class="title">Predictor</span>[<span class="type">Vector</span>, <span class="type">GBTRegressor</span>, <span class="type">GBTRegressionModel</span>]</span></span><br><span class="line"><span class="class">	<span class="keyword">with</span> <span class="title">GBTRegressorParams</span> <span class="keyword">with</span> <span class="title">DefaultParamsWritable</span> <span class="keyword">with</span> <span class="title">Logging</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">this</span></span>() = <span class="keyword">this</span>(<span class="type">Identifiable</span>.randomUID(<span class="string">"gbtr"</span>))</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>同<code>GBTClassifier</code>的参数一样，分类和回归的默认参数只有<code>impurity</code>和<code>lossType</code>不同</p>
-<ol>
-<li><code>impurity</code>参数<br>支持：variance<br>默认：variance</li>
-<li><code>lossType</code>参数<br>支持：squared(L2)、absolute(L1)<br>默认：squared</li>
-</ol>
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ol>
-<li><code>copy</code>方法<br><code>GBTRegressor</code>的拷贝函数。</li>
-<li><code>train</code>方法<br><code>GBTRegressor</code>类的主要方法，和<code>GBTClassifier</code>基本相同，底层都是调用<code>GradientBoostedTrees</code>实现，只是对label没有要求。</li>
-</ol>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @input: 训练数据, DataSet</span></span><br><span class="line"><span class="comment">// @output: 学习到的模型, GBTRegressionModel</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">train</span></span>(dataset: <span class="type">Dataset</span>[_]): <span class="type">GBTRegressionModel</span> = &#123;</span><br><span class="line">	<span class="comment">// 得到类别特征</span></span><br><span class="line">	<span class="keyword">val</span> categoricalFeatures: <span class="type">Map</span>[<span class="type">Int</span>, <span class="type">Int</span>] =</span><br><span class="line">	<span class="type">MetadataUtils</span>.getCategoricalFeatures(dataset.schema($(featuresCol)))</span><br><span class="line">	<span class="comment">// 转换训练数据</span></span><br><span class="line">	<span class="keyword">val</span> oldDataset: <span class="type">RDD</span>[<span class="type">LabeledPoint</span>] = extractLabeledPoints(dataset)</span><br><span class="line">	<span class="comment">// 获得特征个数及boosting策略</span></span><br><span class="line">	<span class="keyword">val</span> numFeatures = oldDataset.first().features.size</span><br><span class="line">	<span class="keyword">val</span> boostingStrategy = <span class="keyword">super</span>.getOldBoostingStrategy(categoricalFeatures, <span class="type">OldAlgo</span>.<span class="type">Regression</span>)</span><br><span class="line">	<span class="comment">// 用于记录日志</span></span><br><span class="line">	<span class="keyword">val</span> instr = <span class="type">Instrumentation</span>.create(<span class="keyword">this</span>, oldDataset)</span><br><span class="line">	instr.logParams(params: _*)</span><br><span class="line">	instr.logNumFeatures(numFeatures)</span><br><span class="line">	<span class="comment">// 调用GradientBoostedTrees训练得到一组学习器及权重</span></span><br><span class="line">	<span class="keyword">val</span> (baseLearners, learnerWeights) = <span class="type">GradientBoostedTrees</span>.run(oldDataset, boostingStrategy, $(seed))</span><br><span class="line">	<span class="comment">// 将学到的模型封装成GBTRegressionModel并返回</span></span><br><span class="line">	<span class="keyword">val</span> m = <span class="keyword">new</span> <span class="type">GBTRegressionModel</span>(uid, baseLearners, learnerWeights, numFeatures)</span><br><span class="line">	instr.logSuccess(m)</span><br><span class="line">	m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="GBTRegressor对象"><a href="#GBTRegressor对象" class="headerlink" title="GBTRegressor对象"></a><code>GBTRegressor</code>对象</h2><p>同<code>GBTClassifier</code>对象</p>
-<h2 id="GBTRegressionModel类"><a href="#GBTRegressionModel类" class="headerlink" title="GBTRegressionModel类"></a><code>GBTRegressionModel</code>类</h2><p>其他方法同<code>GBTClassifierModel</code>类，只有一个关键的方法<code>predict</code>需要额外说明。</p>
-<ol>
-<li><code>predict</code>方法<br><em>**关键的预测方法</em>，先得到每个基学习器的预测值，然后通过权重累加和得到最终的预测值，和分类方法的唯一区别就是少一步，不需要通过阈值进行类别划分。</li>
-</ol>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">predict</span></span>(features: <span class="type">Vector</span>): <span class="type">Double</span> = &#123;</span><br><span class="line">	<span class="comment">// 得到每棵树的预测结果</span></span><br><span class="line">	<span class="keyword">val</span> treePredictions = _trees.map(_.rootNode.predictImpl(features).prediction)</span><br><span class="line">	<span class="comment">// 乘以权重之后求和得到最终结果</span></span><br><span class="line">	blas.ddot(numTrees, treePredictions, <span class="number">1</span>, _treeWeights, <span class="number">1</span>)</span><br><span class="line">	<span class="comment">// 不需要通过阈值进行转换</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="GBTRegressionModel对象"><a href="#GBTRegressionModel对象" class="headerlink" title="GBTRegressionModel对象"></a><code>GBTRegressionModel</code>对象</h2><p>同<code>GBTClassifierModel</code>对象</p>
+<h1 id="DecisionTreeRegressor类"><a href="#DecisionTreeRegressor类" class="headerlink" title="DecisionTreeRegressor类"></a><code>DecisionTreeRegressor</code>类</h1><p>同<code>DecisionTreeClassifier</code>类基本一样(定义、参数、方法)，train方法也是通过调用<code>RandomForest.run</code>实现，不同之处在于参数。<br>回归树继承的是<code>DecisionTreeRegressorParams</code>回归参数；分类树继承的是<code>DecisionTreeClassifierParams</code>分类参数。两个参数都继承了决策树参数<code>DecisionTreeParams</code>，并且分别继承了各自的参数<code>TreeRegressorParams</code>和<code>TreeClassifierParams</code>，这两个参数通过设置计算信息增益的方法区分回归和分类任务。也就是说分类树和回归树在这个层面主要体现在信息增益的计算方式不同。另外增加了一个参数<code>varianceCol</code>列名，表示有偏样本的预测值方差。</p>
+<h1 id="DecisionTreeRegressionModel类"><a href="#DecisionTreeRegressionModel类" class="headerlink" title="DecisionTreeRegressionModel类"></a><code>DecisionTreeRegressionModel</code>类</h1><p>Spark.ML的模型都一样，都是通过一个学习器训练得到一个用于预测的模型。学习器主要包含的是各种学习参数和train方法；用于预测的模型主要包含的是训练得到的模型结构和predict方法。回归树的predict方法如下所示。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// predcit方法得到预测结果</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">predict</span></span>(features: <span class="type">Vector</span>): <span class="type">Double</span> = &#123;</span><br><span class="line">    rootNode.predictImpl(features).prediction</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 得到预测结果方差</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">predictVariance</span></span>(features: <span class="type">Vector</span>): <span class="type">Double</span> = &#123;</span><br><span class="line">    rootNode.predictImpl(features).impurityStats.calculate()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">transform</span></span>(dataset: <span class="type">Dataset</span>[_]): <span class="type">DataFrame</span> = &#123;</span><br><span class="line">    transformSchema(dataset.schema, logging = <span class="literal">true</span>)</span><br><span class="line">    transformImpl(dataset)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 将预测结果和预测结果方差添加到原始数据上</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">transformImpl</span></span>(dataset: <span class="type">Dataset</span>[_]): <span class="type">DataFrame</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> predictUDF = udf &#123; (features: <span class="type">Vector</span>) =&gt; predict(features) &#125;</span><br><span class="line">    <span class="keyword">val</span> predictVarianceUDF = udf &#123; (features: <span class="type">Vector</span>) =&gt; predictVariance(features) &#125;</span><br><span class="line">    <span class="keyword">var</span> output = dataset.toDF()</span><br><span class="line">    <span class="keyword">if</span> ($(predictionCol).nonEmpty) &#123;</span><br><span class="line">        output = output.withColumn($(predictionCol), predictUDF(col($(featuresCol))))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (isDefined(varianceCol) &amp;&amp; $(varianceCol).nonEmpty) &#123;</span><br><span class="line">        output = output.withColumn($(varianceCol), predictVarianceUDF(col($(featuresCol))))</span><br><span class="line">    &#125;</span><br><span class="line">    output</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其它方法基本同<code>DecisionTreeClassifier</code>保持一致。</p>
 
       
     </div>
@@ -476,8 +459,6 @@
           
             <a href="/tags/Spark/" rel="tag"># Spark</a>
           
-            <a href="/tags/GBDT/" rel="tag"># GBDT</a>
-          
         </div>
       
 
@@ -489,8 +470,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/04/Spark.GBDT学习-GBTClassifier/" rel="next" title="Spark.GBDT学习-GBTClassifier">
-                <i class="fa fa-chevron-left"></i> Spark.GBDT学习-GBTClassifier
+              <a href="/2018/07/09/Spark.DT学习-DecisionTreeClassifier/" rel="next" title="Spark.DT学习-DecisionTreeClassifier">
+                <i class="fa fa-chevron-left"></i> Spark.DT学习-DecisionTreeClassifier
               </a>
             
           </div>
@@ -498,10 +479,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/04/Spark.GBDT学习-GBT总结/" rel="prev" title="Spark.GBDT学习-GBT总结">
-                Spark.GBDT学习-GBT总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -643,7 +620,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GBTRegressor类"><span class="nav-number">1.</span> <span class="nav-text">GBTRegressor类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数"><span class="nav-number">1.2.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法"><span class="nav-number">1.3.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBTRegressor对象"><span class="nav-number">2.</span> <span class="nav-text">GBTRegressor对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBTRegressionModel类"><span class="nav-number">3.</span> <span class="nav-text">GBTRegressionModel类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBTRegressionModel对象"><span class="nav-number">4.</span> <span class="nav-text">GBTRegressionModel对象</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DecisionTreeRegressor类"><span class="nav-number">1.</span> <span class="nav-text">DecisionTreeRegressor类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DecisionTreeRegressionModel类"><span class="nav-number">2.</span> <span class="nav-text">DecisionTreeRegressionModel类</span></a></li></ol></div>
             
 
           </div>
